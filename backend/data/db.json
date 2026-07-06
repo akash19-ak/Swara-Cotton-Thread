@@ -1,0 +1,129 @@
+{
+  "products": [
+    {
+      "id": "seed-saree-1",
+      "name": "Handloom Pure Cotton Saree",
+      "price": 1299,
+      "originalPrice": 1899,
+      "category": "Cotton Sarees",
+      "description": "Premium quality handloom cotton saree with traditional zari border. Soft, breathable, and perfect for all occasions.",
+      "images": [
+        "/images/saree1.jpg",
+        "/images/saree1_detail.jpg"
+      ],
+      "inStock": true,
+      "isTrending": true,
+      "sizes": [
+        "Free Size"
+      ]
+    },
+    {
+      "id": "seed-kurti-1",
+      "name": "Elegant Indigo A-Line Kurti",
+      "price": 799,
+      "originalPrice": 1199,
+      "category": "Kurtis",
+      "description": "Beautiful A-line indigo blue kurti with block print details. Made from 100% pure cotton for absolute comfort.",
+      "images": [
+        "/images/kurti1.jpg",
+        "/images/kurti1_detail.jpg"
+      ],
+      "inStock": true,
+      "isTrending": true,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ]
+    },
+    {
+      "id": "seed-material-1",
+      "name": "Unstitched Cotton Dress Material",
+      "price": 950,
+      "originalPrice": 1450,
+      "category": "Dress Materials",
+      "description": "Traditional Jaipur block printed dress material. Includes fabric for top, bottom, and a beautiful cotton dupatta.",
+      "images": [
+        "/images/material1.jpg"
+      ],
+      "inStock": true,
+      "isTrending": false,
+      "sizes": [
+        "Unstitched"
+      ]
+    },
+    {
+      "id": "seed-saree-2",
+      "name": "Mulmul Cotton Floral Saree",
+      "price": 1499,
+      "originalPrice": 2199,
+      "category": "Cotton Sarees",
+      "description": "Lightweight and ultra-soft mulmul cotton saree with hand-printed floral motifs. Elegant and comfortable.",
+      "images": [
+        "/images/saree2.jpg"
+      ],
+      "inStock": true,
+      "isTrending": true,
+      "sizes": [
+        "Free Size"
+      ]
+    },
+    {
+      "id": "seed-kurti-2",
+      "name": "Block Print Straight Kurta",
+      "price": 650,
+      "originalPrice": 999,
+      "category": "Kurtis",
+      "description": "Straight-cut cotton kurta featuring classic block prints and v-neck. Ideal for daily wear.",
+      "images": [
+        "/images/kurti2.jpg"
+      ],
+      "inStock": true,
+      "isTrending": false,
+      "sizes": [
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "seed-material-2",
+      "name": "Chanderi Cotton Suit Set",
+      "price": 1850,
+      "originalPrice": 2500,
+      "category": "Dress Materials",
+      "description": "Luxurious Chanderi cotton dress material set. Perfect for festive and semi-formal wear.",
+      "images": [
+        "/images/material2.jpg"
+      ],
+      "inStock": true,
+      "isTrending": true,
+      "sizes": [
+        "Unstitched"
+      ]
+    }
+  ],
+  "brand": {
+    "name": "Swara Cotton Thread",
+    "tagline": "Threads of Heritage, Comfort of Cotton",
+    "description": "Welcome to Swara Cotton Thread, where we curate the finest handcrafted cotton sarees, kurtis, and dress materials. Each piece is selected for its superior quality thread, ethnic prints, and comfortable fit, celebrating traditional Indian craftsmanship in modern silhouettes.",
+    "logo": "/images/logo.png",
+    "banners": [
+      {
+        "image": "/images/banner1.jpg",
+        "title": "Summer Handloom Edit",
+        "subtitle": "Experience pure comfort in our handcrafted cotton sarees"
+      },
+      {
+        "image": "/images/banner2.jpg",
+        "title": "Ethnic Kurtis Collection",
+        "subtitle": "Trendy block prints for your everyday look"
+      }
+    ],
+    "whatsappNumber": "919876543210",
+    "email": "contact@swaracottonthread.com",
+    "address": "Swara Cotton Thread, 12, Handloom Market, Ring Road, Surat, Gujarat - 395002"
+  }
+}
