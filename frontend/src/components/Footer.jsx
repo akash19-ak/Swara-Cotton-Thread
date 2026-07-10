@@ -67,6 +67,14 @@ export default function Footer() {
           <p className="footer-credits">
             Crafted with traditional heritage & premium quality threads.
           </p>
+          <Link to="/admin/login" className="footer-admin-button" title="Admin Login" aria-label="Admin Login">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 2v6" />
+              <path d="M5 7h14" />
+              <rect x="3" y="8" width="18" height="13" rx="2" />
+              <path d="M16 12v4" />
+            </svg>
+          </Link>
         </div>
       </div>
     </footer>

@@ -24,22 +24,7 @@ import AdminDashboard from './pages/AdminDashboard';
 // Styles
 import './App.css';
 
-/* Floating Admin FAB — hidden when already on admin pages */
-function AdminFAB() {
-  const location = useLocation();
-  const isAdminPage = location.pathname.startsWith('/admin');
-  if (isAdminPage) return null;
-  return (
-    <Link to="/admin/dashboard" className="admin-fab" title="Admin Panel" aria-label="Admin Panel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="3"/>
-        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/>
-        <path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 15.54a5 5 0 0 1 0-7.07"/>
-      </svg>
-      <span>Admin</span>
-    </Link>
-  );
-}
+/* Admin FAB removed — admin access is available only via footer */
 
 function SplashScreen({ logo }) {
   return (
@@ -73,8 +58,7 @@ function AppContent() {
         {/* Slide-out Cart Drawer */}
         <CartDrawer />
 
-        {/* Floating Admin Button (bottom-right corner) */}
-        <AdminFAB />
+        {/* Admin button removed from main screen; use footer button */}
 
         {/* Main Pages */}
         <main className="main-content">
