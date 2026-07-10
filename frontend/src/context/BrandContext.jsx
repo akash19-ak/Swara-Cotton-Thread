@@ -14,7 +14,7 @@ export const BrandProvider = ({ children }) => {
       { image: "/images/banner2.jpg", title: "Ethnic Kurtis Collection", subtitle: "Trendy block prints for your everyday look" }
     ],
     gallery: [],
-    whatsappNumber: "919876543210",
+    whatsappNumber: "919021667151",
     email: "contact@swaracottonthread.com",
     address: "Swara Cotton Thread, 12, Handloom Market, Ring Road, Surat, Gujarat - 395002"
   };

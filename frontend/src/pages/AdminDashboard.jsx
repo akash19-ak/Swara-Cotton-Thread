@@ -633,7 +633,7 @@ export default function AdminDashboard() {
 
             <div className="form-grid-2">
               <div className="form-group">
-                <label>WhatsApp Contact Number (No leading + or 0, prefix country code. Example: 919876543210)</label>
+                <label>WhatsApp Contact Number (No leading + or 0, prefix country code. Example: 919021667151)</label>
                 <input 
                   type="text" 
                   value={brandForm.whatsappNumber}
