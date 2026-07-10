@@ -13,26 +13,35 @@ export default function ProductList() {
 
   // Search & Filter state
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [categoriesList, setCategoriesList] = useState(['All']);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
   const [maxPrice, setMaxPrice] = useState(3000);
   const [priceLimit, setPriceLimit] = useState(3000);
+  const [sortOption, setSortOption] = useState('featured');
 
-  // Sync category state with search query param
+  // Sync category and sort state with search query params
   useEffect(() => {
     const categoryParam = searchParams.get('category');
+    const sortParam = searchParams.get('sort');
+
     if (categoryParam) {
-      setSelectedCategory(categoryParam);
+      const categoryValues = categoryParam
+        .split(',')
+        .map(cat => cat.trim())
+        .filter(cat => cat && cat.toLowerCase() !== 'all');
+      setSelectedCategories(categoryValues);
     } else {
-      setSelectedCategory('All');
+      setSelectedCategories([]);
     }
+
+    setSortOption(sortParam || 'featured');
   }, [searchParams]);
 
   useEffect(() => {
     const categoryOptions = Array.isArray(brand?.categories) && brand.categories.length > 0
       ? brand.categories
       : ['Cotton Sarees', 'Kurtis', 'Dress Materials'];
-    setCategoriesList(['All', ...categoryOptions]);
+    setCategoriesList(categoryOptions);
   }, [brand]);
 
   // Fetch all products
@@ -66,15 +75,16 @@ export default function ProductList() {
     let result = [...products];
 
     // Category Filter
-    if (selectedCategory !== 'All') {
-      result = result.filter(p => p.category.toLowerCase() === selectedCategory.toLowerCase());
+    if (selectedCategories.length > 0) {
+      const activeCategories = selectedCategories.map(cat => cat.toLowerCase());
+      result = result.filter(p => activeCategories.includes(p.category.toLowerCase()));
     }
 
     // Search term filter
     if (searchTerm.trim() !== '') {
       const term = searchTerm.toLowerCase();
       result = result.filter(
-        p => p.name.toLowerCase().includes(term) || 
+        p => p.name.toLowerCase().includes(term) ||
              (p.description && p.description.toLowerCase().includes(term))
       );
     }
@@ -82,23 +92,61 @@ export default function ProductList() {
     // Price Filter
     result = result.filter(p => p.price <= maxPrice);
 
+    // Sort results
+    if (sortOption === 'price-asc') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortOption === 'price-desc') {
+      result.sort((a, b) => b.price - a.price);
+    } else if (sortOption === 'name-asc') {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortOption === 'name-desc') {
+      result.sort((a, b) => b.name.localeCompare(a.name));
+    }
+
     setFilteredProducts(result);
-  }, [products, selectedCategory, searchTerm, maxPrice]);
+  }, [products, selectedCategories, searchTerm, maxPrice, sortOption]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+
+    if (selectedCategories.length > 0) {
+      params.set('category', selectedCategories.join(','));
+    } else {
+      params.delete('category');
+    }
+
+    if (sortOption && sortOption !== 'featured') {
+      params.set('sort', sortOption);
+    } else {
+      params.delete('sort');
+    }
+
+    setSearchParams(params);
+  }, [selectedCategories, sortOption]);
 
   const handleCategoryClick = (category) => {
     if (category === 'All') {
-      searchParams.delete('category');
-    } else {
-      searchParams.set('category', category);
+      setSelectedCategories([]);
+      return;
     }
-    setSearchParams(searchParams);
+
+    setSelectedCategories(prev => {
+      if (prev.includes(category)) {
+        return prev.filter(cat => cat !== category);
+      }
+      return [...prev, category];
+    });
   };
 
   const resetFilters = () => {
     setSearchTerm('');
     setMaxPrice(priceLimit);
-    searchParams.delete('category');
-    setSearchParams(searchParams);
+    setSelectedCategories([]);
+    setSortOption('featured');
+    const params = new URLSearchParams(searchParams);
+    params.delete('category');
+    params.delete('sort');
+    setSearchParams(params);
   };
 
   return (
@@ -113,9 +161,9 @@ export default function ProductList() {
         
         {/* Text Search */}
         <div className="search-box">
-          <input 
-            type="text" 
-            placeholder="Search dresses, prints..." 
+          <input
+            type="text"
+            placeholder="Search dresses, prints..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="form-control"
@@ -125,12 +173,29 @@ export default function ProductList() {
           )}
         </div>
 
+        {/* Sort Options */}
+        <div className="sort-control">
+          <label htmlFor="sortSelect">Sort by</label>
+          <select
+            id="sortSelect"
+            className="form-select"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name-asc">Name: A to Z</option>
+            <option value="name-desc">Name: Z to A</option>
+          </select>
+        </div>
+
         {/* Category Pills */}
         <div className="category-pills-row">
-          {categoriesList.map((cat, idx) => (
+          {['All', ...categoriesList].map((cat, idx) => (
             <button
               key={idx}
-              className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
+              className={`category-pill ${selectedCategories.length === 0 && cat === 'All' ? 'active' : ''} ${selectedCategories.includes(cat) ? 'active' : ''}`}
               onClick={() => handleCategoryClick(cat)}
             >
               {cat}
@@ -155,7 +220,7 @@ export default function ProductList() {
         </div>
 
         {/* Reset button */}
-        {(searchTerm || selectedCategory !== 'All' || maxPrice !== priceLimit) && (
+        {(searchTerm || selectedCategories.length > 0 || maxPrice !== priceLimit || sortOption !== 'featured') && (
           <button className="btn btn-secondary btn-sm reset-btn" onClick={resetFilters}>
             Clear Filters
           </button>
