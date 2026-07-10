@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 import AdminRoute from './components/AdminRoute';
+import WhatsAppButton from './components/WhatsAppButton';
 
 // Pages
 import Home from './pages/Home';
@@ -82,6 +83,9 @@ function AppContent() {
             <Route path="*" element={<Home />} />
           </Routes>
         </main>
+
+        {/* Floating WhatsApp chat button */}
+        <WhatsAppButton />
 
         {/* Footer */}
         <Footer />
