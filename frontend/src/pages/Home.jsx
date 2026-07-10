@@ -69,15 +69,6 @@ export default function Home() {
   return (
     <div className="home-page">
 
-      {/* Offer Strip */}
-      <div className="offer-strip">
-        <span className="offer-strip-text">
-          {[...offerTexts, ...offerTexts].map((t, i) => (
-            <span key={i}>{t}</span>
-          ))}
-        </span>
-      </div>
-
       {/* Hero Banner Section */}
       {brand.banners && brand.banners.length > 0 && (
         <section className="hero-slider">
@@ -129,8 +120,6 @@ export default function Home() {
               </div>
             </>
           )}
-
-          <div className="hero-scroll-hint">Scroll</div>
         </section>
       )}
 

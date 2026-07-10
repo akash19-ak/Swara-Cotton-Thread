@@ -212,35 +212,6 @@
   box-shadow: 0 0 10px rgba(201,122,99,0.5);
 }
 
-/* Scroll indicator */
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  right: 3rem;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  color: rgba(255,255,255,0.5);
-  font-size: 0.65rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.hero-scroll-hint::after {
-  content: '';
-  display: block;
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
-
-@keyframes scrollPulse {
-  0%, 100% { transform: scaleY(1); opacity: 1; }
-  50% { transform: scaleY(0.6); opacity: 0.4; }
-}
 
 /* ─── Ethos / Features Strip ──────────────────────────── */
 .ethos-section {
