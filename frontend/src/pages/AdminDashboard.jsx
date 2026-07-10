@@ -301,6 +301,15 @@ export default function AdminDashboard() {
       return;
     }
 
+    const hasProducts = products.some(product => product.category === categoryToRemove);
+    if (hasProducts) {
+      alert('This category cannot be removed because products are currently assigned to it.');
+      return;
+    }
+
+    const confirmed = window.confirm(`Remove category "${categoryToRemove}"?`);
+    if (!confirmed) return;
+
     const updatedCategories = categoriesList.filter(cat => cat !== categoryToRemove);
     const saved = await saveCategoriesToBackend(updatedCategories);
     if (saved) {
@@ -448,14 +457,22 @@ export default function AdminDashboard() {
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.75rem' }}>
-              {categoriesList.map((cat) => (
-                <span key={cat} className="badge badge-trending" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                  {cat}
-                  <button type="button" onClick={() => handleRemoveCategory(cat)} style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>
-                    ×
-                  </button>
-                </span>
-              ))}
+              {categoriesList.map((cat) => {
+                const hasProducts = products.some(product => product.category === cat);
+                return (
+                  <span key={cat} className="badge badge-trending" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                    {cat}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCategory(cat)}
+                      style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: hasProducts ? 'not-allowed' : 'pointer', padding: 0, opacity: hasProducts ? 0.6 : 1 }}
+                      title={hasProducts ? 'This category has products assigned and cannot be removed' : 'Remove category'}
+                    >
+                      ×
+                    </button>
+                  </span>
+                );
+              })}
             </div>
 
             <button type="button" className="btn btn-accent" style={{ marginTop: '1rem' }} onClick={handleSaveCategories}>
