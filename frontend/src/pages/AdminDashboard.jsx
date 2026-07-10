@@ -477,10 +477,10 @@ export default function AdminDashboard() {
             </button>
           </div>
 
-          <div className="brand-settings-form" style={{ marginBottom: '1.5rem' }}>
+          <div className="brand-settings-form category-manager" style={{ marginBottom: '1.5rem' }}>
             <div className="form-group">
               <label>Add a new category</label>
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div className="category-manager-controls">
                 <input
                   type="text"
                   value={categoryDraft}
@@ -494,21 +494,22 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.75rem' }}>
+            <div className="category-list">
               {categoriesList.map((cat) => {
                 const hasProducts = products.some(product => product.category === cat);
                 return (
-                  <span key={cat} className="badge badge-trending" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                    {cat}
+                  <div key={cat} className={`category-pill ${hasProducts ? 'disabled' : ''}`}>
+                    <span>{cat}</span>
                     <button
                       type="button"
+                      className={`category-remove-button ${hasProducts ? 'disabled' : ''}`}
                       onClick={() => handleRemoveCategory(cat)}
-                      style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: hasProducts ? 'not-allowed' : 'pointer', padding: 0, opacity: hasProducts ? 0.6 : 1 }}
                       title={hasProducts ? 'This category has products assigned and cannot be removed' : 'Remove category'}
+                      disabled={hasProducts}
                     >
-                      ×
+                      ✕
                     </button>
-                  </span>
+                  </div>
                 );
               })}
             </div>
@@ -776,22 +777,29 @@ export default function AdminDashboard() {
       )}
 
       {activeTab === 'gallery' && (
-        <div className="dashboard-tab-content">
-          <div className="actions-bar">
-            <h3>Website Gallery Images</h3>
-            <p className="help-text">Upload decorative gallery photos for the public gallery page.</p>
+        <div className="dashboard-tab-content gallery-panel">
+          <div className="actions-bar gallery-actions">
+            <div>
+              <h3>Website Gallery Images</h3>
+              <p className="help-text">Upload decorative gallery photos for the public gallery page.</p>
+            </div>
+            <button className="btn btn-secondary btn-sm" onClick={() => setGalleryList([])} disabled={galleryList.length === 0}>
+              Clear Gallery
+            </button>
           </div>
 
           <div className="gallery-upload-section">
-            <div className="form-group">
-              <label>Upload Gallery Image</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, 'gallery')}
-                className="form-control"
-              />
-              <p className="help-text">Add photos to your brand gallery. Images will appear on the gallery page.</p>
+            <div className="gallery-upload-card">
+              <div className="form-group">
+                <label>Upload Gallery Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, 'gallery')}
+                  className="form-control"
+                />
+                <p className="help-text">Add photos to your brand gallery. Images will appear on the gallery page.</p>
+              </div>
             </div>
 
             {galleryList.length > 0 ? (
@@ -809,7 +817,9 @@ export default function AdminDashboard() {
                 })}
               </div>
             ) : (
-              <p style={{ color: 'var(--text-secondary)', marginTop: '1rem' }}>No gallery images added yet.</p>
+              <div className="empty-catalog-state" style={{ marginTop: '1rem' }}>
+                No gallery images added yet.
+              </div>
             )}
 
             <button className="btn btn-accent" onClick={handleSaveGallery} style={{ marginTop: '1.75rem' }}>
