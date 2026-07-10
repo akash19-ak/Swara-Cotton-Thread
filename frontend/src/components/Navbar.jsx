@@ -66,6 +66,24 @@ export default function Navbar() {
               Shop Collection
             </Link>
           </li>
+          <li>
+            <Link 
+              to="/gallery" 
+              className={isActive('/gallery') ? 'active' : ''}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Gallery
+            </Link>
+          </li>
+          <li>
+            <Link 
+              to="/contact" 
+              className={isActive('/contact') ? 'active' : ''}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
+          </li>
         </ul>
 
         {/* Shopping Cart button */}

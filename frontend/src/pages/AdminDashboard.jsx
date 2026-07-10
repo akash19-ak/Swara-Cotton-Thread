@@ -48,6 +48,7 @@ export default function AdminDashboard() {
 
   // Form states - Banners
   const [bannersList, setBannersList] = useState([]);
+  const [galleryList, setGalleryList] = useState([]);
 
   // Load products and brand initial values
   useEffect(() => {
@@ -68,8 +69,9 @@ export default function AdminDashboard() {
       address: brand.address
     });
 
-    // Seed Banners List
+    // Seed Banners and Gallery Lists
     setBannersList(brand.banners || []);
+    setGalleryList(Array.isArray(brand.gallery) ? brand.gallery : []);
     setCategoriesList(Array.isArray(brand.categories) && brand.categories.length > 0 ? brand.categories : ['Cotton Sarees', 'Kurtis', 'Dress Materials']);
   }, [brand, token, navigate]);
 
@@ -130,6 +132,8 @@ export default function AdminDashboard() {
             updated[index] = { ...updated[index], image: data.url };
             return updated;
           });
+        } else if (targetField === 'gallery') {
+          setGalleryList(prev => [...prev, data.url]);
         }
       } else {
         alert(data.message || 'Image upload failed');
@@ -139,6 +143,34 @@ export default function AdminDashboard() {
       alert('Error uploading image to server');
     } finally {
       setUploadingImage(false);
+    }
+  };
+
+  const handleRemoveGalleryImage = (index) => {
+    setGalleryList(prev => prev.filter((_, idx) => idx !== index));
+  };
+
+  const handleSaveGallery = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/brand', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ gallery: galleryList })
+      });
+
+      if (response.ok) {
+        alert('Gallery images updated successfully!');
+        refreshBrand();
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Error updating gallery');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error saving gallery images');
     }
   };
 
@@ -334,7 +366,7 @@ export default function AdminDashboard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(brandForm)
+        body: JSON.stringify({ ...brandForm, gallery: galleryList })
       });
 
       if (response.ok) {
@@ -426,6 +458,12 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('banners')}
         >
           🖼️ Homepage Banners
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'gallery' ? 'active' : ''}`}
+          onClick={() => setActiveTab('gallery')}
+        >
+          🎨 Gallery
         </button>
       </div>
 
@@ -734,6 +772,50 @@ export default function AdminDashboard() {
           <button className="btn btn-accent" onClick={handleSaveBanners} style={{ marginTop: '2rem' }} disabled={bannersList.length === 0}>
             Save Banners Arrangement
           </button>
+        </div>
+      )}
+
+      {activeTab === 'gallery' && (
+        <div className="dashboard-tab-content">
+          <div className="actions-bar">
+            <h3>Website Gallery Images</h3>
+            <p className="help-text">Upload decorative gallery photos for the public gallery page.</p>
+          </div>
+
+          <div className="gallery-upload-section">
+            <div className="form-group">
+              <label>Upload Gallery Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileUpload(e, 'gallery')}
+                className="form-control"
+              />
+              <p className="help-text">Add photos to your brand gallery. Images will appear on the gallery page.</p>
+            </div>
+
+            {galleryList.length > 0 ? (
+              <div className="gallery-thumbs-grid">
+                {galleryList.map((img, idx) => {
+                  const displayImg = img.startsWith('/') && !img.startsWith('/images/') ? `http://localhost:5000${img}` : img;
+                  return (
+                    <div className="gallery-thumb-card" key={idx}>
+                      <img src={displayImg} alt={`Gallery ${idx + 1}`} />
+                      <button type="button" className="remove-gallery-thumb" onClick={() => handleRemoveGalleryImage(idx)}>
+                        Remove
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p style={{ color: 'var(--text-secondary)', marginTop: '1rem' }}>No gallery images added yet.</p>
+            )}
+
+            <button className="btn btn-accent" onClick={handleSaveGallery} style={{ marginTop: '1.75rem' }}>
+              Save Gallery Images
+            </button>
+          </div>
         </div>
       )}
 

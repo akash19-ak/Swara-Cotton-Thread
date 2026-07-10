@@ -28,6 +28,7 @@ const BrandSchema = new mongoose.Schema({
     title: { type: String },
     subtitle: { type: String }
   }],
+  gallery: [{ type: String }],
   whatsappNumber: { type: String, default: "919876543210" },
   email: { type: String, default: "contact@swaracottonthread.com" },
   address: { type: String, default: "Swara Cotton Thread, 12, Handloom Market, Ring Road, Surat, Gujarat - 395002" }
@@ -62,6 +63,7 @@ const defaultBrand = {
     { image: "/images/banner1.jpg", title: "Summer Handloom Edit", subtitle: "Experience pure comfort in our handcrafted cotton sarees" },
     { image: "/images/banner2.jpg", title: "Ethnic Kurtis Collection", subtitle: "Trendy block prints for your everyday look" }
   ],
+  gallery: [],
   whatsappNumber: "919876543210",
   email: "contact@swaracottonthread.com",
   address: "Swara Cotton Thread, 12, Handloom Market, Ring Road, Surat, Gujarat - 395002"
