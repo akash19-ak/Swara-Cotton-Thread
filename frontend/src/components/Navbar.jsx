@@ -26,10 +26,12 @@ export default function Navbar() {
           <div className="navbar-brand-wrap">
             {brand.logo ? (
               <img src={logoSrc} alt={brand.name} className="navbar-logo" />
-            ) : (
+            ) : null}
+
+            <div className="navbar-brand-text">
               <span className="navbar-brand-name serif-title">{brand.name}</span>
-            )}
-            <span className="navbar-brand-tag">{brand.tagline}</span>
+              <span className="navbar-brand-tag">{brand.tagline}</span>
+            </div>
           </div>
         </Link>
 
