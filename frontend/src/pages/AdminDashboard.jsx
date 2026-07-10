@@ -252,7 +252,34 @@ export default function AdminDashboard() {
     setShowProductModal(true);
   };
 
-  const handleAddCategory = () => {
+  const saveCategoriesToBackend = async (nextCategories) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/brand', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ categories: nextCategories })
+      });
+
+      if (response.ok) {
+        setCategoriesList(nextCategories);
+        refreshBrand();
+        return true;
+      }
+
+      const data = await response.json();
+      alert(data.message || 'Error updating categories');
+      return false;
+    } catch (err) {
+      console.error(err);
+      alert('Error connecting while saving categories');
+      return false;
+    }
+  };
+
+  const handleAddCategory = async () => {
     const trimmed = categoryDraft.trim();
     if (!trimmed) return;
     if (categoriesList.some(cat => cat.toLowerCase() === trimmed.toLowerCase())) {
@@ -261,46 +288,31 @@ export default function AdminDashboard() {
     }
 
     const updatedCategories = [...categoriesList, trimmed];
-    setCategoriesList(updatedCategories);
-    setCategoryDraft('');
-    setProductForm(prev => ({ ...prev, category: trimmed }));
+    const saved = await saveCategoriesToBackend(updatedCategories);
+    if (saved) {
+      setCategoryDraft('');
+      setProductForm(prev => ({ ...prev, category: trimmed }));
+    }
   };
 
-  const handleRemoveCategory = (categoryToRemove) => {
+  const handleRemoveCategory = async (categoryToRemove) => {
     if (categoriesList.length <= 1) {
       alert('You need at least one category.');
       return;
     }
 
     const updatedCategories = categoriesList.filter(cat => cat !== categoryToRemove);
-    setCategoriesList(updatedCategories);
-    if (productForm.category === categoryToRemove) {
-      setProductForm(prev => ({ ...prev, category: updatedCategories[0] || '' }));
+    const saved = await saveCategoriesToBackend(updatedCategories);
+    if (saved) {
+      setProductForm(prev => ({
+        ...prev,
+        category: prev.category === categoryToRemove ? updatedCategories[0] || '' : prev.category
+      }));
     }
   };
 
   const handleSaveCategories = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/brand', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ categories: categoriesList })
-      });
-
-      if (response.ok) {
-        alert('Categories updated successfully!');
-        refreshBrand();
-      } else {
-        const data = await response.json();
-        alert(data.message || 'Error updating categories');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Error connecting while saving categories');
-    }
+    await saveCategoriesToBackend(categoriesList);
   };
 
   // Save brand details updates
