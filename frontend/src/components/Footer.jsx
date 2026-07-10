@@ -25,7 +25,7 @@ export default function Footer() {
           <ul className="footer-links">
             <li><Link to="/">Home</Link></li>
             <li><Link to="/products">All Products</Link></li>
-            <li><Link to="/admin/dashboard">Admin Dashboard</Link></li>
+            {/* <li><Link to="/admin/dashboard">Admin Dashboard</Link></li> */}
           </ul>
         </div>
 
