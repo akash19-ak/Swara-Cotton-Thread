@@ -142,6 +142,36 @@ const defaultProducts = [
   }
 ];
 
+function normalizeCategoryData(db) {
+  const brandCategories = Array.isArray(db?.brand?.categories) && db.brand.categories.length > 0
+    ? db.brand.categories
+    : [...defaultBrand.categories];
+
+  const productCategories = (db?.products || [])
+    .map((product) => product.category)
+    .filter(Boolean);
+
+  const mergedCategories = [...new Set([...brandCategories, ...productCategories])];
+
+  const normalizedProducts = (db?.products || []).map((product) => {
+    const trimmedCategory = typeof product.category === 'string' ? product.category.trim() : '';
+    const matchingCategory = mergedCategories.find((cat) => cat.toLowerCase() === trimmedCategory.toLowerCase());
+    return {
+      ...product,
+      category: matchingCategory || mergedCategories[0] || defaultBrand.categories[0]
+    };
+  });
+
+  return {
+    ...db,
+    products: normalizedProducts,
+    brand: {
+      ...(db?.brand || {}),
+      categories: mergedCategories
+    }
+  };
+}
+
 // Helper to read JSON DB
 function readLocalDb() {
   try {
@@ -150,11 +180,17 @@ function readLocalDb() {
       if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir, { recursive: true });
       }
-      fs.writeFileSync(localDbPath, JSON.stringify({ products: defaultProducts, brand: defaultBrand }, null, 2));
-      return { products: defaultProducts, brand: defaultBrand };
+      const initialDb = normalizeCategoryData({ products: defaultProducts, brand: defaultBrand });
+      fs.writeFileSync(localDbPath, JSON.stringify(initialDb, null, 2));
+      return initialDb;
     }
-    const data = fs.readFileSync(localDbPath, 'utf8');
-    return JSON.parse(data);
+    const fileData = fs.readFileSync(localDbPath, 'utf8');
+    const parsedDb = JSON.parse(fileData);
+    const normalizedDb = normalizeCategoryData(parsedDb);
+    if (JSON.stringify(normalizedDb) !== fileData) {
+      writeLocalDb(normalizedDb);
+    }
+    return normalizedDb;
   } catch (err) {
     console.error('Error reading local JSON DB', err);
     return { products: [], brand: {} };
@@ -222,12 +258,22 @@ async function createProduct(productData) {
     return await newProduct.save();
   } else {
     const db = readLocalDb();
+    const normalizedCategory = productData.category && typeof productData.category === 'string'
+      ? productData.category.trim()
+      : '';
+    const validCategory = normalizedCategory
+      ? (db.brand.categories || []).find((cat) => cat.toLowerCase() === normalizedCategory.toLowerCase()) || normalizedCategory
+      : (db.brand.categories || [defaultBrand.categories[0]])[0];
+
     const newProduct = {
       id: Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
       ...productData,
+      category: validCategory,
       createdAt: new Date().toISOString()
     };
+
     db.products.unshift(newProduct);
+    db.brand.categories = [...new Set([...(db.brand.categories || []), validCategory])];
     writeLocalDb(db);
     return newProduct;
   }
@@ -240,7 +286,14 @@ async function updateProduct(id, productData) {
     const db = readLocalDb();
     const index = db.products.findIndex(p => p.id === id);
     if (index !== -1) {
-      db.products[index] = { ...db.products[index], ...productData };
+      const nextProduct = { ...db.products[index], ...productData };
+      const normalizedCategory = productData.category && typeof productData.category === 'string'
+        ? productData.category.trim()
+        : nextProduct.category;
+      const matchingCategory = (db.brand.categories || []).find((cat) => cat.toLowerCase() === normalizedCategory.toLowerCase());
+      nextProduct.category = matchingCategory || normalizedCategory || (db.brand.categories || [defaultBrand.categories[0]])[0];
+      db.products[index] = nextProduct;
+      db.brand.categories = [...new Set([...(db.brand.categories || []), nextProduct.category])];
       writeLocalDb(db);
       return db.products[index];
     }
