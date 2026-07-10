@@ -63,7 +63,7 @@ function AppContent() {
 
   return (
     <>
-      {showSplash && <SplashScreen logo={brand?.logo ?? '/images/sctlogo.jpeg'} />}
+      {showSplash && <SplashScreen logo={brand?.logo ?? '/images/sctlogo.png'} />}
       <div className="app-container">
         {/* Navbar */}
         <Navbar />
