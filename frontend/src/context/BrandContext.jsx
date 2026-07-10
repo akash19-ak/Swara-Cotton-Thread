@@ -8,6 +8,7 @@ export const BrandProvider = ({ children }) => {
     tagline: "Threads of Heritage, Comfort of Cotton",
     description: "Welcome to Swara Cotton Thread, where we curate the finest handcrafted cotton sarees, kurtis, and dress materials. Each piece is selected for its superior quality thread, ethnic prints, and comfortable fit, celebrating traditional Indian craftsmanship in modern silhouettes.",
     logo: "/images/logo.png",
+    categories: ["Cotton Sarees", "Kurtis", "Dress Materials"],
     banners: [
       { image: "/images/banner1.jpg", title: "Summer Handloom Edit", subtitle: "Experience pure comfort in our handcrafted cotton sarees" },
       { image: "/images/banner2.jpg", title: "Ethnic Kurtis Collection", subtitle: "Trendy block prints for your everyday look" }

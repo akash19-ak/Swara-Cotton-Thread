@@ -22,6 +22,7 @@ const BrandSchema = new mongoose.Schema({
   tagline: { type: String, default: "Threads of Heritage, Comfort of Cotton" },
   description: { type: String, default: "Welcome to Swara Cotton Thread, where we curate the finest handcrafted cotton sarees, kurtis, and dress materials. Each piece is selected for its superior quality thread, ethnic prints, and comfortable fit, celebrating traditional Indian craftsmanship in modern silhouettes." },
   logo: { type: String, default: "/images/logo.png" },
+  categories: [{ type: String }],
   banners: [{
     image: { type: String },
     title: { type: String },
@@ -56,6 +57,7 @@ const defaultBrand = {
   tagline: "Threads of Heritage, Comfort of Cotton",
   description: "Welcome to Swara Cotton Thread, where we curate the finest handcrafted cotton sarees, kurtis, and dress materials. Each piece is selected for its superior quality thread, ethnic prints, and comfortable fit, celebrating traditional Indian craftsmanship in modern silhouettes.",
   logo: "/images/logo.png",
+  categories: ["Cotton Sarees", "Kurtis", "Dress Materials"],
   banners: [
     { image: "/images/banner1.jpg", title: "Summer Handloom Edit", subtitle: "Experience pure comfort in our handcrafted cotton sarees" },
     { image: "/images/banner2.jpg", title: "Ethnic Kurtis Collection", subtitle: "Trendy block prints for your everyday look" }
@@ -267,11 +269,19 @@ async function getBrand() {
     if (!brand) {
       brand = await MongoBrand.create(defaultBrand);
     }
+    if (!brand.categories || brand.categories.length === 0) {
+      brand.categories = [...defaultBrand.categories];
+      await brand.save();
+    }
     return brand;
   } else {
     const db = readLocalDb();
     if (!db.brand || Object.keys(db.brand).length === 0) {
-      db.brand = defaultBrand;
+      db.brand = { ...defaultBrand };
+      writeLocalDb(db);
+    }
+    if (!db.brand.categories || db.brand.categories.length === 0) {
+      db.brand.categories = [...defaultBrand.categories];
       writeLocalDb(db);
     }
     return db.brand;
@@ -289,6 +299,9 @@ async function updateBrand(brandData) {
   } else {
     const db = readLocalDb();
     db.brand = { ...db.brand, ...brandData };
+    if (!db.brand.categories || db.brand.categories.length === 0) {
+      db.brand.categories = [...defaultBrand.categories];
+    }
     writeLocalDb(db);
     return db.brand;
   }

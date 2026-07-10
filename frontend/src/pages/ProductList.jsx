@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+import { BrandContext } from '../context/BrandContext';
 import './ProductList.css';
 
 export default function ProductList() {
+  const { brand } = useContext(BrandContext);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,6 +14,7 @@ export default function ProductList() {
   // Search & Filter state
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [categoriesList, setCategoriesList] = useState(['All']);
   const [maxPrice, setMaxPrice] = useState(3000);
   const [priceLimit, setPriceLimit] = useState(3000);
 
@@ -24,6 +27,13 @@ export default function ProductList() {
       setSelectedCategory('All');
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    const categoryOptions = Array.isArray(brand?.categories) && brand.categories.length > 0
+      ? brand.categories
+      : ['Cotton Sarees', 'Kurtis', 'Dress Materials'];
+    setCategoriesList(['All', ...categoryOptions]);
+  }, [brand]);
 
   // Fetch all products
   useEffect(() => {
@@ -90,8 +100,6 @@ export default function ProductList() {
     searchParams.delete('category');
     setSearchParams(searchParams);
   };
-
-  const categoriesList = ['All', 'Cotton Sarees', 'Kurtis', 'Dress Materials'];
 
   return (
     <div className="product-list-page container">

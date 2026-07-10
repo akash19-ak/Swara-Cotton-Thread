@@ -14,6 +14,8 @@ export default function AdminDashboard() {
   // Data states
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [categoryDraft, setCategoryDraft] = useState('');
+  const [categoriesList, setCategoriesList] = useState(['Cotton Sarees', 'Kurtis', 'Dress Materials']);
 
   // Form states - Products CRUD
   const [showProductModal, setShowProductModal] = useState(false);
@@ -68,6 +70,7 @@ export default function AdminDashboard() {
 
     // Seed Banners List
     setBannersList(brand.banners || []);
+    setCategoriesList(Array.isArray(brand.categories) && brand.categories.length > 0 ? brand.categories : ['Cotton Sarees', 'Kurtis', 'Dress Materials']);
   }, [brand, token, navigate]);
 
   const fetchProducts = async () => {
@@ -235,7 +238,7 @@ export default function AdminDashboard() {
       price: '',
       originalPrice: '',
       description: '',
-      category: 'Cotton Sarees',
+      category: categoriesList[0] || 'Cotton Sarees',
       images: [],
       inStock: true,
       isTrending: false,
@@ -247,6 +250,57 @@ export default function AdminDashboard() {
     setEditingProduct(null);
     resetProductForm();
     setShowProductModal(true);
+  };
+
+  const handleAddCategory = () => {
+    const trimmed = categoryDraft.trim();
+    if (!trimmed) return;
+    if (categoriesList.some(cat => cat.toLowerCase() === trimmed.toLowerCase())) {
+      alert('This category already exists.');
+      return;
+    }
+
+    const updatedCategories = [...categoriesList, trimmed];
+    setCategoriesList(updatedCategories);
+    setCategoryDraft('');
+    setProductForm(prev => ({ ...prev, category: trimmed }));
+  };
+
+  const handleRemoveCategory = (categoryToRemove) => {
+    if (categoriesList.length <= 1) {
+      alert('You need at least one category.');
+      return;
+    }
+
+    const updatedCategories = categoriesList.filter(cat => cat !== categoryToRemove);
+    setCategoriesList(updatedCategories);
+    if (productForm.category === categoryToRemove) {
+      setProductForm(prev => ({ ...prev, category: updatedCategories[0] || '' }));
+    }
+  };
+
+  const handleSaveCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/brand', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ categories: categoriesList })
+      });
+
+      if (response.ok) {
+        alert('Categories updated successfully!');
+        refreshBrand();
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Error updating categories');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error connecting while saving categories');
+    }
   };
 
   // Save brand details updates
@@ -317,7 +371,6 @@ export default function AdminDashboard() {
   };
 
   const sizesList = ['S', 'M', 'L', 'XL', 'XXL', 'Free Size', 'Unstitched'];
-  const categoriesList = ['Cotton Sarees', 'Kurtis', 'Dress Materials'];
 
   return (
     <div className="admin-dashboard-page container animate-fade-in">
@@ -362,6 +415,39 @@ export default function AdminDashboard() {
             <h3>Active Catalog</h3>
             <button className="btn btn-primary btn-sm" onClick={handleOpenAddModal}>
               + Add New Product
+            </button>
+          </div>
+
+          <div className="brand-settings-form" style={{ marginBottom: '1.5rem' }}>
+            <div className="form-group">
+              <label>Add a new category</label>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <input
+                  type="text"
+                  value={categoryDraft}
+                  onChange={(e) => setCategoryDraft(e.target.value)}
+                  className="form-control"
+                  placeholder="Example: Lehenga"
+                />
+                <button type="button" className="btn btn-secondary btn-sm" onClick={handleAddCategory}>
+                  Add Category
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.75rem' }}>
+              {categoriesList.map((cat) => (
+                <span key={cat} className="badge badge-trending" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                  {cat}
+                  <button type="button" onClick={() => handleRemoveCategory(cat)} style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+
+            <button type="button" className="btn btn-accent" style={{ marginTop: '1rem' }} onClick={handleSaveCategories}>
+              Save Categories
             </button>
           </div>
 
