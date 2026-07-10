@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 
 // Providers
-import { BrandProvider } from './context/BrandContext';
+import { BrandProvider, BrandContext } from './context/BrandContext';
 import { CartProvider } from './context/CartContext';
 
 // Components
@@ -39,45 +39,75 @@ function AdminFAB() {
   );
 }
 
+function SplashScreen({ logo }) {
+  return (
+    <div className="splash-screen" aria-hidden="true">
+      <div className="splash-backdrop" />
+      <div className="splash-card">
+        <div className="splash-logo-wrapper">
+          <img src={logo} alt="Swara Cotton Thread" className="splash-logo" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AppContent() {
+  const [showSplash, setShowSplash] = useState(true);
+  const { brand } = useContext(BrandContext);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 1400);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <>
+      {showSplash && <SplashScreen logo={brand?.logo ?? '/images/sctlogo.jpeg'} />}
+      <div className="app-container">
+        {/* Navbar */}
+        <Navbar />
+
+        {/* Slide-out Cart Drawer */}
+        <CartDrawer />
+
+        {/* Floating Admin Button (bottom-right corner) */}
+        <AdminFAB />
+
+        {/* Main Pages */}
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            {/* Fallback */}
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </main>
+
+        {/* Footer */}
+        <Footer />
+      </div>
+    </>
+  );
+}
+
 function App() {
   return (
     <BrandProvider>
       <CartProvider>
         <Router>
-          <div className="app-container">
-            {/* Navbar */}
-            <Navbar />
-
-            {/* Slide-out Cart Drawer */}
-            <CartDrawer />
-
-            {/* Floating Admin Button (bottom-right corner) */}
-            <AdminFAB />
-
-            {/* Main Pages */}
-            <main className="main-content">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<ProductList />} />
-                <Route path="/product/:id" element={<ProductDetails />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route
-                  path="/admin/dashboard"
-                  element={
-                    <AdminRoute>
-                      <AdminDashboard />
-                    </AdminRoute>
-                  }
-                />
-                {/* Fallback */}
-                <Route path="*" element={<Home />} />
-              </Routes>
-            </main>
-
-            {/* Footer */}
-            <Footer />
-          </div>
+          <AppContent />
         </Router>
       </CartProvider>
     </BrandProvider>
