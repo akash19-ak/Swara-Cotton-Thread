@@ -12,15 +12,23 @@ export default function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
-  // Determine logo source
-  const logoSrc = brand.logo.startsWith('/') ? `http://localhost:5000${brand.logo}` : brand.logo;
+  // Determine logo source:
+  // - if logo points to frontend public `/images/...` use it as-is
+  // - if logo points to backend uploads like `/uploads/...` prefix backend origin
+  const logoSrc = brand.logo && brand.logo.startsWith('/')
+    ? (brand.logo.startsWith('/images/') ? brand.logo : `http://localhost:5000${brand.logo}`)
+    : brand.logo;
 
   return (
     <nav className="navbar">
       <div className="navbar-container container">
         <Link to="/" className="navbar-logo-link" onClick={() => setMobileMenuOpen(false)}>
           <div className="navbar-brand-wrap">
-            <span className="navbar-brand-name serif-title">{brand.name}</span>
+            {brand.logo ? (
+              <img src={logoSrc} alt={brand.name} className="navbar-logo" />
+            ) : (
+              <span className="navbar-brand-name serif-title">{brand.name}</span>
+            )}
             <span className="navbar-brand-tag">{brand.tagline}</span>
           </div>
         </Link>
