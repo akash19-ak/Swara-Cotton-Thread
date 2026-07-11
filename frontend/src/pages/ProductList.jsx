@@ -18,11 +18,13 @@ export default function ProductList() {
   const [maxPrice, setMaxPrice] = useState(3000);
   const [priceLimit, setPriceLimit] = useState(3000);
   const [sortOption, setSortOption] = useState('featured');
+  const [availabilityFilter, setAvailabilityFilter] = useState('all');
 
   // Sync category and sort state with search query params
   useEffect(() => {
     const categoryParam = searchParams.get('category');
     const sortParam = searchParams.get('sort');
+    const availabilityParam = searchParams.get('availability');
 
     if (categoryParam) {
       const categoryValues = categoryParam
@@ -35,6 +37,7 @@ export default function ProductList() {
     }
 
     setSortOption(sortParam || 'featured');
+    setAvailabilityFilter(availabilityParam || 'all');
   }, [searchParams]);
 
   useEffect(() => {
@@ -92,6 +95,13 @@ export default function ProductList() {
     // Price Filter
     result = result.filter(p => p.price <= maxPrice);
 
+    // Additional filter
+    if (availabilityFilter === 'in-stock') {
+      result = result.filter(p => p.inStock !== false);
+    } else if (availabilityFilter === 'trending') {
+      result = result.filter(p => p.isTrending);
+    }
+
     // Sort results
     if (sortOption === 'price-asc') {
       result.sort((a, b) => a.price - b.price);
@@ -110,7 +120,7 @@ export default function ProductList() {
     }
 
     setFilteredProducts(result);
-  }, [products, selectedCategories, searchTerm, maxPrice, sortOption]);
+  }, [products, selectedCategories, searchTerm, maxPrice, sortOption, availabilityFilter]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -127,21 +137,22 @@ export default function ProductList() {
       params.delete('sort');
     }
 
-    setSearchParams(params);
-  }, [selectedCategories, sortOption]);
+    if (availabilityFilter && availabilityFilter !== 'all') {
+      params.set('availability', availabilityFilter);
+    } else {
+      params.delete('availability');
+    }
 
-  const handleCategoryClick = (category) => {
+    setSearchParams(params);
+  }, [selectedCategories, sortOption, availabilityFilter]);
+
+  const handleCategoryChange = (category) => {
     if (category === 'All') {
       setSelectedCategories([]);
       return;
     }
 
-    setSelectedCategories(prev => {
-      if (prev.includes(category)) {
-        return prev.filter(cat => cat !== category);
-      }
-      return [...prev, category];
-    });
+    setSelectedCategories([category]);
   };
 
   const resetFilters = () => {
@@ -149,9 +160,11 @@ export default function ProductList() {
     setMaxPrice(priceLimit);
     setSelectedCategories([]);
     setSortOption('featured');
+    setAvailabilityFilter('all');
     const params = new URLSearchParams(searchParams);
     params.delete('category');
     params.delete('sort');
+    params.delete('availability');
     setSearchParams(params);
   };
 
@@ -197,17 +210,35 @@ export default function ProductList() {
           </select>
         </div>
 
-        {/* Category Pills */}
-        <div className="category-pills-row">
-          {['All', ...categoriesList].map((cat, idx) => (
-            <button
-              key={idx}
-              className={`category-pill ${selectedCategories.length === 0 && cat === 'All' ? 'active' : ''} ${selectedCategories.includes(cat) ? 'active' : ''}`}
-              onClick={() => handleCategoryClick(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Category Dropdown */}
+        <div className="sort-control">
+          <label htmlFor="categorySelect">Category</label>
+          <select
+            id="categorySelect"
+            className="form-select"
+            value={selectedCategories[0] || 'All'}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+          >
+            <option value="All">All Categories</option>
+            {categoriesList.map((cat, idx) => (
+              <option key={idx} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Additional Filter */}
+        <div className="sort-control">
+          <label htmlFor="availabilitySelect">Show</label>
+          <select
+            id="availabilitySelect"
+            className="form-select"
+            value={availabilityFilter}
+            onChange={(e) => setAvailabilityFilter(e.target.value)}
+          >
+            <option value="all">All Products</option>
+            <option value="in-stock">In Stock Only</option>
+            <option value="trending">Trending Only</option>
+          </select>
         </div>
 
         {/* Price Slider */}
@@ -227,7 +258,7 @@ export default function ProductList() {
         </div>
 
         {/* Reset button */}
-        {(searchTerm || selectedCategories.length > 0 || maxPrice !== priceLimit || sortOption !== 'featured') && (
+        {(searchTerm || selectedCategories.length > 0 || maxPrice !== priceLimit || sortOption !== 'featured' || availabilityFilter !== 'all') && (
           <button className="btn btn-secondary btn-sm reset-btn" onClick={resetFilters}>
             Clear Filters
           </button>

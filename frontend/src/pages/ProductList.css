@@ -22,7 +22,7 @@
 /* Shop controls layout */
 .shop-controls-container {
   display: grid;
-  grid-template-columns: minmax(240px, 1.5fr) minmax(180px, 1fr);
+  grid-template-columns: minmax(240px, 1.6fr) repeat(3, minmax(160px, 1fr));
   gap: 1.25rem;
   padding: 1.5rem;
   background-color: var(--white);
@@ -30,7 +30,7 @@
   border-radius: 10px;
   margin-bottom: 3rem;
   box-shadow: var(--shadow-sm);
-  align-items: start;
+  align-items: end;
 }
 
 .search-box {
@@ -59,6 +59,14 @@
 }
 
 .sort-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 180px;
+}
+
+.category-filter-control,
+.availability-filter-control {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
