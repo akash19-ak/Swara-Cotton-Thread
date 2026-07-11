@@ -4,7 +4,7 @@ import './WhatsAppButton.css';
 
 export default function WhatsAppButton() {
   const { brand } = useContext(BrandContext);
-  const raw = brand?.whatsappNumber || '919021667151';
+  const raw = brand?.whatsappNumber || '917769039915';
   const number = raw.replace(/[^0-9+]/g, '');
   const url = `https://wa.me/${number}`;
 

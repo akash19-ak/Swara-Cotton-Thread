@@ -223,6 +223,35 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Location / Visit Us Section */}
+      <section className="section-padding location-section">
+        <div className="container location-grid">
+          <div className="location-map-card">
+            <iframe
+              title="Swara Cotton Thread Location"
+              src="https://www.google.com/maps?q=18.5475,73.9258&z=15&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+
+          <div className="location-details-card">
+            <span className="story-subtitle">Visit Our Store</span>
+            <h2 className="serif-title">Find Swara Cotton Thread on the map</h2>
+            <p>{brand.address || 'Your store address will appear here.'}</p>
+            {/* <p className="location-coordinates">18°32'51.0"N 73°55'32.9"E</p> */}
+            <a
+              href="https://www.google.com/maps?q=18.5475,73.9258"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary"
+            >
+              Open Google Maps
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Brand Story Section */}
       <section className="section-padding brand-story-section">
         <div className="container story-container">

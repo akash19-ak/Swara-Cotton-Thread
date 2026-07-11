@@ -6,6 +6,7 @@ import './Footer.css';
 export default function Footer() {
   const { brand } = useContext(BrandContext);
   const currentYear = new Date().getFullYear();
+  const googleMapsUrl = 'https://www.google.com/maps?q=18.5475,73.9258';
 
   return (
     <footer className="footer">
@@ -54,6 +55,12 @@ export default function Footer() {
             <li className="contact-address">
               <span className="contact-label">Address:</span>
               <p>{brand.address}</p>
+            </li>
+            <li className="contact-location">
+              <span className="contact-label">Location:</span>
+              <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
+                Open in Google Maps
+              </a>
             </li>
           </ul>
         </div>

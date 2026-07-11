@@ -136,6 +136,15 @@
   line-height: 1.5;
 }
 
+.contact-location {
+  margin-top: 0.15rem;
+}
+
+.contact-location a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
 .footer-bottom {
   border-top: 1px solid var(--border-color);
   padding: 1.5rem 0;
