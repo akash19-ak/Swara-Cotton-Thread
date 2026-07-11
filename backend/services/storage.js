@@ -30,7 +30,7 @@ const BrandSchema = new mongoose.Schema({
   }],
   gallery: [{ type: String }],
   whatsappNumber: { type: String, default: "919021667151" },
-  email: { type: String, default: "contact@swaracottonthread.com" },
+  email: { type: String, default: "nageshrivnayak@gmail.com" },
   address: { type: String, default: "Swara Cotton Thread, 12, Handloom Market, Ring Road, Surat, Gujarat - 395002" }
 });
 
@@ -65,7 +65,7 @@ const defaultBrand = {
   ],
   gallery: [],
   whatsappNumber: "919021667151",
-  email: "contact@swaracottonthread.com",
+  email: "nageshrivnayak@gmail.com",
   address: "Swara Cotton Thread, 12, Handloom Market, Ring Road, Surat, Gujarat - 395002"
 };
 

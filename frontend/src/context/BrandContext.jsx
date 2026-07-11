@@ -15,7 +15,7 @@ export const BrandProvider = ({ children }) => {
     ],
     gallery: [],
     whatsappNumber: "919021667151",
-    email: "contact@swaracottonthread.com",
+    email: "nageshrivnayak@gmail.com",
     address: "Swara Cotton Thread, 12, Handloom Market, Ring Road, Surat, Gujarat - 395002"
   };
   const [brand, setBrand] = useState(initialBrand);
