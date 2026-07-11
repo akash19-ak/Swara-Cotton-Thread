@@ -101,6 +101,12 @@ export default function ProductList() {
       result.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortOption === 'name-desc') {
       result.sort((a, b) => b.name.localeCompare(a.name));
+    } else if (sortOption === 'recently-added') {
+      result.sort((a, b) => {
+        const aDate = new Date(a.createdAt || a.created_at || 0).getTime();
+        const bDate = new Date(b.createdAt || b.created_at || 0).getTime();
+        return bDate - aDate;
+      });
     }
 
     setFilteredProducts(result);
@@ -183,6 +189,7 @@ export default function ProductList() {
             onChange={(e) => setSortOption(e.target.value)}
           >
             <option value="featured">Featured</option>
+            <option value="recently-added">Recently Added</option>
             <option value="price-asc">Price: Low to High</option>
             <option value="price-desc">Price: High to Low</option>
             <option value="name-asc">Name: A to Z</option>
