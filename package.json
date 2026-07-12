@@ -1,0 +1,14 @@
+{
+  "name": "swara-cotton-thread",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "npm install --no-fund --no-audit && npm --prefix backend install --no-fund --no-audit && npm --prefix frontend install --no-fund --no-audit",
+    "dev": "npm run setup && concurrently -k \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix backend run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
