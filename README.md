@@ -77,13 +77,20 @@ Make sure you have **Node.js** (v18 or higher recommended) and **npm** installed
    ```bash
    npm install
    ```
-3. (Optional) Set up MongoDB:
+3. Copy the sample environment file and adjust upload settings if you need persistent media storage:
+   ```bash
+   copy .env.example .env
+   ```
+   Useful variables:
+   - `UPLOAD_DIR` can point to a writable folder outside the repository (for example a mounted volume or cloud storage path).
+   - `UPLOAD_PUBLIC_BASE_URL` controls the public URL prefix used for generated image links.
+4. (Optional) Set up MongoDB:
    - By default, the application runs on a local JSON file store (`backend/data/db.json`) and seeds it with default products. **No database setup is required to run!**
    - If you prefer to use MongoDB, copy or modify the `backend/.env` file and uncomment the `MONGODB_URI` line:
      ```env
      MONGODB_URI=mongodb://localhost:27017/swara_cotton_thread
      ```
-4. Launch the Express server:
+5. Launch the Express server:
    ```bash
    npm run dev
    ```

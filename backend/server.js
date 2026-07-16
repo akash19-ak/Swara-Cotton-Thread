@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const { connectDB } = require('./services/database');
 const { initStorage } = require('./services/storage');
+const { getUploadDirectory, resolveUploadPublicBaseUrl } = require('./services/uploadStorage');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,7 +19,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static uploaded media
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+const uploadDir = getUploadDirectory();
+const uploadBaseUrl = resolveUploadPublicBaseUrl();
+app.use(uploadBaseUrl, express.static(uploadDir));
 
 // API Routes
 app.use('/api/admin', require('./routes/admin'));

@@ -2,14 +2,10 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const auth = require('../middleware/auth');
+const { getUploadDirectory, getUploadUrl } = require('../services/uploadStorage');
 
-// Make sure target directory exists
-const uploadDir = path.join(__dirname, '../public/uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+const uploadDir = getUploadDirectory();
 
 // Configure Storage
 const storageConfig = multer.diskStorage({
@@ -18,7 +14,7 @@ const storageConfig = multer.diskStorage({
   },
   filename: function(req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    cb(null, `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`);
   }
 });
 
@@ -46,8 +42,7 @@ router.post('/', auth, upload.single('image'), (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const fileUrl = `/uploads/${req.file.filename}`;
-    res.json({ url: fileUrl });
+    res.json({ url: getUploadUrl(req.file.filename) });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -59,7 +54,7 @@ router.post('/multiple', auth, upload.array('images', 5), (req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: 'No files uploaded' });
     }
-    const fileUrls = req.files.map(file => `/uploads/${file.filename}`);
+    const fileUrls = req.files.map(file => getUploadUrl(file.filename));
     res.json({ urls: fileUrls });
   } catch (err) {
     res.status(500).json({ message: err.message });
