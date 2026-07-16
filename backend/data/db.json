@@ -1,21 +1,19 @@
 {
   "products": [
     {
-      "id": "seed-saree-1",
-      "name": "Handloom Pure Cotton Saree",
-      "price": 1299,
-      "originalPrice": 1899,
-      "category": "Cotton Sarees",
-      "description": "Premium quality handloom cotton saree with traditional zari border. Soft, breathable, and perfect for all occasions.",
-      "images": [
-        "/images/saree1.jpg",
-        "/images/saree1_detail.jpg"
-      ],
+      "id": "mrneacj14mg",
+      "name": "ss",
+      "price": 122,
+      "originalPrice": 100,
+      "description": "jwhesadkj",
+      "category": "SHIRTS",
+      "images": [],
       "inStock": true,
-      "isTrending": true,
+      "isTrending": false,
       "sizes": [
-        "Free Size"
-      ]
+        "L"
+      ],
+      "createdAt": "2026-07-16T10:57:32.653Z"
     },
     {
       "id": "seed-kurti-1",

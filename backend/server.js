@@ -29,6 +29,12 @@ app.use('/api/products', require('./routes/products'));
 app.use('/api/brand', require('./routes/brand'));
 app.use('/api/upload', require('./routes/upload'));
 
+
+app.get("/", (req, res) => {
+  res.send("Backend is running successfully 🚀");
+});
+
+
 // Basic Health Endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', database: require('./services/database').isMongoDB() ? 'MongoDB' : 'Local JSON' });
