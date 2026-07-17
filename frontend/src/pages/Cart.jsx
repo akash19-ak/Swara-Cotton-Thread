@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { BrandContext } from '../context/BrandContext';
+import { getImageUrl } from '../apiConfig';
 import './Cart.css';
 
 export default function Cart() {
@@ -73,9 +74,7 @@ export default function Cart() {
             <div className="cart-items-body">
               {cartItems.map((item, idx) => {
                 const mainImg = item.images && item.images.length > 0 ? item.images[0] : '/images/placeholder.jpg';
-                const displayImg = mainImg.startsWith('/') && !mainImg.startsWith('/images/')
-                  ? `http://localhost:5000${mainImg}` 
-                  : mainImg;
+                const displayImg = getImageUrl(mainImg);
 
                 return (
                   <div className="cart-page-item" key={`${item.id}-${item.selectedSize}-${idx}`}>

@@ -9,7 +9,7 @@ export default function ProductCard({ product }) {
   const productId = product.id || product._id;
   const mainImage = product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg';
   const displayImage = mainImage.startsWith('/') && !mainImage.startsWith('/images/')
-    ? `http://localhost:5000${mainImage}` 
+    ? getImageUrl(mainImage)
     : mainImage;
 
   const discount = product.originalPrice && product.originalPrice > product.price

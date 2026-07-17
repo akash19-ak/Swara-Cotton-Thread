@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BrandContext } from '../context/BrandContext';
 import ProductCard from '../components/ProductCard';
+import { getApiUrl, getImageUrl } from '../apiConfig';
 import './Home.css';
 
 export default function Home() {
@@ -14,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products');
+        const response = await fetch(getApiUrl('/api/products'));
         if (response.ok) {
           const data = await response.json();
           const trending = data.filter(p => p.isTrending).slice(0, 4);
@@ -73,9 +74,7 @@ export default function Home() {
       {brand.banners && brand.banners.length > 0 && (
         <section className="hero-slider">
           {brand.banners.map((banner, index) => {
-            const bannerImg = banner.image.startsWith('/') && !banner.image.startsWith('/images/')
-              ? `http://localhost:5000${banner.image}`
-              : banner.image;
+            const bannerImg = getImageUrl(banner.image);
 
             return (
               <div

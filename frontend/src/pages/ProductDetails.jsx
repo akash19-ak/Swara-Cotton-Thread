@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { BrandContext } from '../context/BrandContext';
 import ProductCard from '../components/ProductCard';
+import { getApiUrl, getImageUrl } from '../apiConfig';
 import './ProductDetails.css';
 
 export default function ProductDetails() {
@@ -29,7 +30,7 @@ export default function ProductDetails() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`http://localhost:5000/api/products/${id}`);
+        const response = await fetch(getApiUrl(`/api/products/${id}`));
         if (!response.ok) {
           throw new Error('Product not found');
         }
@@ -45,7 +46,7 @@ export default function ProductDetails() {
         }
 
         // Fetch related products of same category
-        const relResponse = await fetch('http://localhost:5000/api/products');
+        const relResponse = await fetch(getApiUrl('/api/products'));
         if (relResponse.ok) {
           const relData = await relResponse.json();
           // Find products in same category, excluding current product
@@ -113,9 +114,7 @@ export default function ProductDetails() {
   // Resolve image paths
   const getFullImgPath = (img) => {
     if (!img) return 'https://placehold.co/400x533/f6f3eb/2b2523?text=Swara+Cotton';
-    return img.startsWith('/') && !img.startsWith('/images/')
-      ? `http://localhost:5000${img}`
-      : img;
+    return getImageUrl(img);
   };
 
   const images = product.images && product.images.length > 0 ? product.images : [null];

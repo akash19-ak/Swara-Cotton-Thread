@@ -16,7 +16,7 @@ export default function Navbar() {
   // - if logo points to frontend public `/images/...` use it as-is
   // - if logo points to backend uploads like `/uploads/...` prefix backend origin
   const logoSrc = brand.logo && brand.logo.startsWith('/')
-    ? (brand.logo.startsWith('/images/') ? brand.logo : `http://localhost:5000${brand.logo}`)
+    ? getImageUrl(brand.logo)
     : brand.logo;
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BrandContext } from '../context/BrandContext';
+import { getApiUrl, getImageUrl } from '../apiConfig';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
@@ -78,7 +79,7 @@ export default function AdminDashboard() {
   const fetchProducts = async () => {
     setLoadingProducts(true);
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch(getApiUrl('/api/products'));
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
@@ -106,7 +107,7 @@ export default function AdminDashboard() {
     setUploadingImage(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch(getApiUrl('/api/upload'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -152,7 +153,7 @@ export default function AdminDashboard() {
 
   const handleSaveGallery = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/brand', {
+      const response = await fetch(getApiUrl('/api/brand'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -178,8 +179,8 @@ export default function AdminDashboard() {
   const handleProductSubmit = async (e) => {
     e.preventDefault();
     const url = editingProduct 
-      ? `http://localhost:5000/api/products/${editingProduct.id || editingProduct._id}`
-      : 'http://localhost:5000/api/products';
+      ? getApiUrl(`/api/products/${editingProduct.id || editingProduct._id}`)
+      : getApiUrl('/api/products');
     const method = editingProduct ? 'PUT' : 'POST';
 
     try {
@@ -231,7 +232,7 @@ export default function AdminDashboard() {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${prodId}`, {
+      const response = await fetch(getApiUrl(`/api/products/${prodId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -286,7 +287,7 @@ export default function AdminDashboard() {
 
   const saveCategoriesToBackend = async (nextCategories) => {
     try {
-      const response = await fetch('http://localhost:5000/api/brand', {
+      const response = await fetch(getApiUrl('/api/brand'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -360,7 +361,7 @@ export default function AdminDashboard() {
   const handleBrandSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/brand', {
+      const response = await fetch(getApiUrl('/api/brand'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -401,7 +402,7 @@ export default function AdminDashboard() {
 
   const handleSaveBanners = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/brand', {
+      const response = await fetch(getApiUrl('/api/brand'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -544,7 +545,7 @@ export default function AdminDashboard() {
                     const prodId = prod.id || prod._id;
                     const img = prod.images && prod.images.length > 0 ? prod.images[0] : '/images/placeholder.jpg';
                     const displayImg = img.startsWith('/') && !img.startsWith('/images/')
-                      ? `http://localhost:5000${img}`
+                      ? getImageUrl(img)
                       : img;
 
                     return (
@@ -680,7 +681,7 @@ export default function AdminDashboard() {
               <div className="logo-preview-box">
                 {brandForm.logo && (
                   <img 
-                    src={brandForm.logo.startsWith('/') && !brandForm.logo.startsWith('/images/') ? `http://localhost:5000${brandForm.logo}` : brandForm.logo} 
+                    src={getImageUrl(brandForm.logo)}
                     alt="Brand Logo" 
                     onError={(e) => {
                       e.target.src = 'https://placehold.co/100/f6f3eb/2b2523?text=Logo';
@@ -710,7 +711,7 @@ export default function AdminDashboard() {
           <div className="banners-edit-list">
             {bannersList.map((banner, index) => {
               const displayImg = banner.image.startsWith('/') && !banner.image.startsWith('/images/')
-                ? `http://localhost:5000${banner.image}`
+                ? getImageUrl(banner.image)
                 : banner.image;
 
               return (
@@ -805,7 +806,7 @@ export default function AdminDashboard() {
             {galleryList.length > 0 ? (
               <div className="gallery-thumbs-grid">
                 {galleryList.map((img, idx) => {
-                  const displayImg = img.startsWith('/') && !img.startsWith('/images/') ? `http://localhost:5000${img}` : img;
+                  const displayImg = getImageUrl(img);
                   return (
                     <div className="gallery-thumb-card" key={idx}>
                       <img src={displayImg} alt={`Gallery ${idx + 1}`} />
@@ -957,7 +958,7 @@ export default function AdminDashboard() {
 
                 <div className="uploaded-images-previews">
                   {productForm.images.map((img, idx) => {
-                    const disp = img.startsWith('/') && !img.startsWith('/images/') ? `http://localhost:5000${img}` : img;
+                    const disp = getImageUrl(img);
                     return (
                       <div className="img-form-thumb" key={idx}>
                         <img src={disp} alt="product thumbnail" />

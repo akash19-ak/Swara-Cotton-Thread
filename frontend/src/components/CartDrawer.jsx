@@ -100,7 +100,7 @@ export default function CartDrawer() {
               {cartItems.map((item, index) => {
                 const itemImg = item.images && item.images.length > 0 ? item.images[0] : '/images/placeholder.jpg';
                 const displayImg = itemImg.startsWith('/') && !itemImg.startsWith('/images/')
-                  ? `http://localhost:5000${itemImg}` 
+                  ? getImageUrl(itemImg)
                   : itemImg;
                   
                 return (

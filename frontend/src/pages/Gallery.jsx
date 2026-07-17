@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { BrandContext } from '../context/BrandContext';
+import { getImageUrl } from '../apiConfig';
 import './Home.css';
 
 export default function Gallery() {
@@ -21,7 +22,7 @@ export default function Gallery() {
         ) : (
           <div className="gallery-grid">
             {galleryImages.map((img, index) => {
-              const imgSrc = img.startsWith('/') && !img.startsWith('/images/') ? `http://localhost:5000${img}` : img;
+              const imgSrc = getImageUrl(img);
               return (
                 <div className="gallery-card" key={index}>
                   <img src={imgSrc} alt={`Gallery ${index + 1}`} onError={(e) => { e.target.src = 'https://placehold.co/500x500/f6f3eb/2b2523?text=Gallery'; }} />

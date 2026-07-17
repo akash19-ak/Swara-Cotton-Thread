@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { getApiUrl } from '../apiConfig';
 
 export const BrandContext = createContext();
 
@@ -23,7 +24,7 @@ export const BrandProvider = ({ children }) => {
 
   const fetchBrand = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/brand');
+      const response = await fetch(getApiUrl('/api/brand'));
       if (response.ok) {
         const data = await response.json();
         setBrand(prev => ({ ...prev, ...data }));
