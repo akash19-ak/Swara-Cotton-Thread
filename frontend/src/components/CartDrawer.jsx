@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { BrandContext } from '../context/BrandContext';
+import { getImageUrl } from '../apiConfig';
 import './CartDrawer.css';
 
 export default function CartDrawer() {

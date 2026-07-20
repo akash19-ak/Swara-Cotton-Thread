@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { BrandContext } from '../context/BrandContext';
+import { getImageUrl } from '../apiConfig';
 import './Navbar.css';
 
 export default function Navbar() {
